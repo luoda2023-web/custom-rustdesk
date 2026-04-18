@@ -1,15 +1,15 @@
 [package]
-name = "rustdesk"
+name = "luoda"
 version = "1.4.0"
-authors = ["rustdesk <info@rustdesk.com>"]
+authors = ["luoda2023@gmail.com"]
 edition = "2021"
 build= "build.rs"
 description = "RustDesk Remote Desktop"
-default-run = "rustdesk"
+default-run = "luoda"
 rust-version = "1.75"
 
 [lib]
-name = "librustdesk"
+name = "luoda"
 crate-type = ["cdylib", "staticlib", "rlib"]
 
 [[bin]]
@@ -208,7 +208,7 @@ hound = "3.5"
 docopt = "1.1"
 
 [package.metadata.bundle]
-name = "RustDesk"
+name = "luoda"
 identifier = "com.carriez.rustdesk"
 icon = ["res/32x32.png", "res/128x128.png", "res/128x128@2x.png"]
 osx_minimum_system_version = "10.14"
