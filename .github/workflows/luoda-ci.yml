@@ -6,19 +6,6 @@ on:
       - main
       - master
   workflow_dispatch:
-    inputs:
-      upload:
-        description: "Upload artifacts"
-        required: false
-        default: "true"
-        type: boolean
-
-env:
-  FLUTTER_VERSION: "3.24.4"
-  RUSTUP_TOOLCHAIN: stable
-  VCPKG_COMMIT_ID: "3c69c0d07b47e07da5a89d24d4586be7d65fe13"
-  ARMV7_VCPKG_COMMIT_ID: "2fd1cf6d3b06421e18d2d5e2f1b8e6c3d89a1b4"
-  LIBJPEGTURBO_COMMIT_ID: "3.2.0.1"
 
 jobs:
   call-flutter-build:
@@ -27,4 +14,4 @@ jobs:
     secrets: inherit
     with:
       upload-artifact: true
-      upload-tag: "nightly"
+      upload-tag: nightly
