@@ -48,7 +48,7 @@ env:
   SIGN_BASE_URL: "${{ secrets.SIGN_BASE_URL }}-2"
 
 jobs:
-  generate-bridge:
+  generate_bridge:
     uses: ./.github/workflows/bridge.yml
 
   build-LUODATempTopMostWindow:
@@ -64,7 +64,7 @@ jobs:
 
   build-for-windows-flutter:
     name: ${{ matrix.job.target }}
-    needs: [build-LUODATempTopMostWindow, generate-bridge]
+    needs: [build-LUODATempTopMostWindow, generate_bridge]
     runs-on: ${{ matrix.job.os }}
     strategy:
       fail-fast: false
@@ -116,7 +116,7 @@ jobs:
           flutter precache --windows
           Invoke-WebRequest -Uri https://github.com/LUODA/engine/releases/download/main/windows-x64-release.zip -OutFile windows-x64-release.zip
           Expand-Archive -Path windows-x64-release.zip -DestinationPath windows-x64-release
-          mv -Force windows-x64-release/* 鑱紺:/hostedtoolcache/windows/flutter/stable-${{ env.FLUTTER_VERSION }}-x64/bin/cache/artifacts/engine/windows-x64-release/
+          mv -Force windows-x64-release/* 閼辩春:/hostedtoolcache/windows/flutter/stable-${{ env.FLUTTER_VERSION }}-x64/bin/cache/artifacts/engine/windows-x64-release/
 
       - name: Patch flutter
         shell: bash
@@ -436,7 +436,7 @@ jobs:
     if: ${{ inputs.upload-artifact }}
     name: build LUODA ios ipa
     runs-on: ${{ matrix.job.os }}
-    needs: [generate-bridge]
+    needs: [generate_bridge]
     strategy:
       fail-fast: false
       matrix:
@@ -555,7 +555,7 @@ jobs:
   build-for-macOS:
     name: ${{ matrix.job.target }}
     runs-on: ${{ matrix.job.os }}
-    needs: [generate-bridge]
+    needs: [generate_bridge]
     strategy:
       fail-fast: false
       matrix:
@@ -814,7 +814,7 @@ jobs:
           files: LUODA-${{ env.VERSION }}-unsigned.tar.gz
 
   build-LUODA-android:
-    needs: [generate-bridge]
+    needs: [generate_bridge]
     name: build LUODA android apk ${{ matrix.job.target }}
     runs-on: ${{ matrix.job.os }}
     strategy:
@@ -1290,7 +1290,7 @@ jobs:
             signed-apk/LUODA-${{ env.VERSION }}-universal${{ env.suffix }}.apk
 
   build-LUODA-linux:
-    needs: [generate-bridge]
+    needs: [generate_bridge]
     name: build LUODA linux ${{ matrix.job.target }}
     runs-on: ${{ matrix.job.on }}
     strategy:
