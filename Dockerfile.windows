@@ -1,0 +1,22 @@
+FROM rust:latest
+
+# 安装Windows交叉编译工具链
+RUN apt-get update && apt-get install -y     gcc-mingw-w64-x86-64     g++-mingw-w64-x86-64     && rustup target add x86_64-pc-windows-gnu
+
+# 安装必要的构建工具
+RUN apt-get install -y     cmake     pkg-config     libssl-dev     && cargo install cargo-deb
+
+# 设置工作目录
+WORKDIR /build
+
+# 复制源码
+COPY . .
+
+# 设置环境变量
+ENV CARGO_TARGET_X86_64_PC_WINDOWS_GNU_LINKER=x86_64-w64-mingw32-gcc
+ENV PKG_CONFIG_SYSROOT_DIR=/usr/x86_64-w64-mingw32
+ENV CC_x86_64_pc_windows_gnu=x86_64-w64-mingw32-gcc
+ENV CXX_x86_64_pc_windows_gnu=x86_64-w64-mingw32-g++
+
+# 编译命令
+CMD ["cargo", "build", "--release", "--target", "x86_64-pc-windows-gnu"]

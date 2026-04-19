@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">Luoda</string>
+    <string name="accessibility_service_description">Allow other devices to control your phone using virtual touch, when Luoda remote desktop is established</string>
+</resources>
