@@ -1,0 +1,19 @@
+name: LUODA Test Build
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  test-call:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Test step
+        run: echo "Test build triggered"
+      - name: Get flutter-build.yml
+        run: |
+          echo "flutter-build.yml exists:"
+          ls -la .github/workflows/flutter-build.yml || echo "NOT FOUND"
+          head -5 .github/workflows/flutter-build.yml || echo "CANNOT READ"
