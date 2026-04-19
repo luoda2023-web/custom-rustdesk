@@ -7,6 +7,8 @@ on:
 
 jobs:
   test-call:
-    uses: ./.github/workflows/test-min.yml
+    uses: ./.github/workflows/flutter-build.yml
     with:
-      tag: "325c5cd"
+      upload-artifact: true
+      upload-tag: "nightly"
+    secrets: inherit
