@@ -1,16 +1,20 @@
 [package]
 name = "rustdesk"
 version = "1.4.6"
-authors = ["rustdesk <info@rustdesk.com>"]
+authors = ["luoda2023@gmail.com"]
 edition = "2021"
 build= "build.rs"
-description = "RustDesk Remote Desktop"
-default-run = "rustdesk"
+description = "LUODA Remote Desktop"
+default-run = "luoda"
 rust-version = "1.75"
 
 [lib]
 name = "librustdesk"
 crate-type = ["cdylib", "staticlib", "rlib"]
+
+[[bin]]
+name = "luoda"
+path = "src/main.rs"
 
 [[bin]]
 name = "naming"
@@ -214,9 +218,9 @@ libxdo-sys = { path = "libs/libxdo-sys-stub" }
 
 [package.metadata.winres]
 LegalCopyright = "Copyright © 2025 Purslane Ltd. All rights reserved."
-ProductName = "RustDesk"
-FileDescription = "RustDesk Remote Desktop"
-OriginalFilename = "rustdesk.exe"
+ProductName = "LUODA"
+Filedescription = "LUODA Remote Desktop"
+OriginalFilename = "luoda.exe"
 
 [target.'cfg(target_os="windows")'.build-dependencies]
 winres = "0.1"
