@@ -4,10 +4,9 @@ on:
   push:
     branches:
       - main
-  workflow_dispatch:
 
 jobs:
   test-call:
-    uses: ./.github/workflows/test-call.yml
+    uses: ./.github/workflows/test-min.yml
     with:
-      upload-artifact: true
+      tag: "325c5cd"

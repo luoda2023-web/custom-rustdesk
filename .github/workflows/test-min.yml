@@ -1,0 +1,14 @@
+name: Test Min Build
+
+on:
+  workflow_call:
+    inputs:
+      tag:
+        type: string
+        default: ""
+
+jobs:
+  min-call:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "min workflow_call works tag=${{ inputs.tag }}"
