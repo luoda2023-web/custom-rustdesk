@@ -55,9 +55,23 @@ jobs:
           targets: ${{ matrix.job.target }}
           components: "rustfmt"
 
-      # Rust cache disabled for debugging
+      - name: Rust Cache
+        uses: Swatinem/rust-cache@v2
+        with:
+          key: "${{ matrix.job.os }}-${{ matrix.job.target }}"
+          prefix-key: "bridge-"
 
-      # Cache disabled for debugging
+      - name: Cache bridge
+        uses: actions/cache@v4
+        with:
+          path: |
+            ./src/bridge_generated.rs
+            ./src/bridge_generated.io.rs
+            ./flutter/lib/generated_bridge.dart
+            ./flutter/lib/generated_bridge.freezed.dart
+            ./flutter/macos/Runner/bridge_generated.h
+            ./flutter/ios/Runner/bridge_generated.h
+          key: bridge-${{ hashFiles('./src/flutter_ffi.rs', './flutter/pubspec.yaml') }}
 
       - name: Install flutter
         uses: subosito/flutter-action@v2
@@ -75,7 +89,7 @@ jobs:
 
       - name: Run flutter rust bridge
         run: |
-          ~/.cargo/bin/flutter_rust_bridge_codegen --verbose --rust-input ./src/flutter_ffi.rs --dart-output ./flutter/lib/generated_bridge.dart --c-output ./flutter/macos/Runner/bridge_generated.h
+          ~/.cargo/bin/flutter_rust_bridge_codegen --rust-input ./src/flutter_ffi.rs --dart-output ./flutter/lib/generated_bridge.dart --c-output ./flutter/macos/Runner/bridge_generated.h
           cp ./flutter/macos/Runner/bridge_generated.h ./flutter/ios/Runner/bridge_generated.h
 
       - name: Upload Artifact
