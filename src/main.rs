@@ -8,6 +8,7 @@ use librustdesk::*;
 #[cfg(any(target_os = "android", target_os = "ios", feature = "flutter"))]
 fn main() {
     if !common::global_init() {
+        eprintln!("Global initialization failed.");
         return;
     }
     common::test_rendezvous_server();
@@ -22,9 +23,6 @@ fn main() {
     feature = "flutter"
 )))]
 fn main() {
-    if !common::global_init() {
-        return;
-    }
     #[cfg(all(windows, not(feature = "inline")))]
     unsafe {
         winapi::um::shellscalingapi::SetProcessDpiAwareness(2);
@@ -48,10 +46,10 @@ fn main() {
         -k, --key=[KEY] ''
        -s, --server=[] 'Start server'",
     );
-    let matches = App::new("luoda")
+    let matches = App::new("rustdesk")
         .version(crate::VERSION)
-        .author("Purslane Ltd<info@dicad.cn>")
-        .about("LUODA command line tool")
+        .author("Purslane Ltd<info@rustdesk.com>")
+        .about("RustDesk command line tool")
         .args_from_usage(&args)
         .get_matches();
     use hbb_common::{config::LocalConfig, env_logger::*};

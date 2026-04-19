@@ -15,7 +15,7 @@
 
 Общение с нами: [Discord](https://discord.gg/nDceKgxnkV) | [Twitter](https://twitter.com/rustdesk) | [Reddit](https://www.reddit.com/r/rustdesk) | [YouTube](https://www.youtube.com/@rustdesk)
 
-[![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/I2I04VU09)
+[![RustDesk Server Pro](https://img.shields.io/badge/RustDesk%20Server%20Pro-%D0%A0%D0%B0%D1%81%D1%88%D0%B8%D1%80%D0%B5%D0%BD%D0%BD%D1%8B%D0%B5%20%D0%92%D0%BE%D0%B7%D0%BC%D0%BE%D0%B6%D0%BD%D0%BE%D1%81%D1%82%D0%B8-blue)](https://rustdesk.com/pricing.html)
 
 Ещё одно программное обеспечение для удаленного рабочего стола, написанное на Rust. Работает из коробки, настройки не требует. Вы полностью контролируете свои данные, не беспокоясь о безопасности. Вы можете использовать наш сервер ретрансляции, [настроить свой собственный](https://rustdesk.com/server), или [написать свой](https://github.com/rustdesk/rustdesk-server-demo).
 
@@ -167,7 +167,7 @@ target/release/rustdesk
 - **[src/ui](https://github.com/rustdesk/rustdesk/tree/master/src/ui)**: графический пользовательский интерфейс на Sciter (устаревшее)
 - **[src/server](https://github.com/rustdesk/rustdesk/tree/master/src/server)**: сервисы аудио, буфера обмена, ввода, видео и сетевых подключений
 - **[src/client.rs](https://github.com/rustdesk/rustdesk/tree/master/src/client.rs)**: одноранговое соединение
-- **[src/rendezvous_mediator.rs](https://github.com/rustdesk/rustdesk/tree/master/src/rendezvous_mediator.rs)**: связь с [сервером Rustdesk](https://github.com/rustdesk/rustdesk-server), ожидает удаленного прямого (через TCP hole punching) или ретранслируемого соединения
+- **[src/rendezvous_mediator.rs](https://github.com/rustdesk/rustdesk/tree/master/src/rendezvous_mediator.rs)**: связь с [сервером RustDesk](https://github.com/rustdesk/rustdesk-server), ожидает удаленного прямого (через TCP hole punching) или ретранслируемого соединения
 - **[src/platform](https://github.com/rustdesk/rustdesk/tree/master/src/platform)**: специфичный для платформы код
 - **[flutter](https://github.com/rustdesk/rustdesk/tree/master/flutter)**: код Flutter для ПК-версии и мобильных устройств
 - **[flutter/web/js](https://github.com/rustdesk/rustdesk/tree/master/flutter/web/v1/js)**: JavaScript для Web-клиента Flutter

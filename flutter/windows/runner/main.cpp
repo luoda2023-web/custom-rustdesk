@@ -7,6 +7,7 @@
 #include <algorithm>
 #include <iostream>
 
+#include "win32_desktop.h"
 #include "flutter_window.h"
 #include "utils.h"
 
@@ -62,7 +63,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE instance, _In_opt_ HINSTANCE prev,
   std::vector<std::string> rust_args(c_args, c_args + args_len);
   free_c_args(c_args, args_len);
 
-  std::wstring app_name = L"LUODA";
+  std::wstring app_name = L"RustDesk";
   FUNC_RUSTDESK_GET_APP_NAME get_rustdesk_app_name = (FUNC_RUSTDESK_GET_APP_NAME)GetProcAddress(hInstance, "get_rustdesk_app_name");
   if (get_rustdesk_app_name) {
     wchar_t app_name_buffer[512] = {0};
@@ -126,8 +127,22 @@ int APIENTRY wWinMain(_In_ HINSTANCE instance, _In_opt_ HINSTANCE prev,
   project.set_dart_entrypoint_arguments(std::move(command_line_arguments));
 
   FlutterWindow window(project);
-  Win32Window::Point origin(10, 10);
-  Win32Window::Size size(800, 600);
+
+  // Get primary monitor's work area.
+  Win32Window::Point workarea_origin(0, 0);
+  Win32Window::Size workarea_size(0, 0);
+
+  Win32Desktop::GetWorkArea(workarea_origin, workarea_size);
+
+  // Compute window bounds for default main window position: (10, 10) x(800, 600)
+  Win32Window::Point relative_origin(10, 10);
+
+  Win32Window::Point origin(workarea_origin.x + relative_origin.x, workarea_origin.y + relative_origin.y);
+  Win32Window::Size size(800u, 600u);
+
+  // Fit the window to the monitor's work area.
+  Win32Desktop::FitToWorkArea(origin, size);
+
   std::wstring window_title;
   if (is_cm_page) {
     window_title = app_name + L" - Connection Manager";

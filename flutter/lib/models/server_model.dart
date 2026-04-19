@@ -8,7 +8,6 @@ import 'package:flutter_hbb/mobile/pages/settings_page.dart';
 import 'package:flutter_hbb/models/chat_model.dart';
 import 'package:flutter_hbb/models/platform_model.dart';
 import 'package:get/get.dart';
-import 'package:wakelock_plus/wakelock_plus.dart';
 import 'package:window_manager/window_manager.dart';
 
 import '../common.dart';
@@ -50,6 +49,8 @@ class ServerModel with ChangeNotifier {
   final List<Client> _clients = [];
 
   Timer? cmHiddenTimer;
+
+  final _wakelockKey = UniqueKey();
 
   bool get isStart => _isStart;
 
@@ -466,21 +467,8 @@ class ServerModel with ChangeNotifier {
     await parent.target?.invokeMethod("stop_service");
     await bind.mainStopService();
     notifyListeners();
-    if (!isLinux) {
-      // current linux is not supported
-      WakelockPlus.disable();
-    }
-  }
-
-  Future<bool> setPermanentPassword(String newPW) async {
-    await bind.mainSetPermanentPassword(password: newPW);
-    await Future.delayed(Duration(milliseconds: 500));
-    final pw = await bind.mainGetPermanentPassword();
-    if (newPW == pw) {
-      return true;
-    } else {
-      return false;
-    }
+    // for androidUpdatekeepScreenOn only
+    WakelockManager.disable(_wakelockKey);
   }
 
   fetchID() async {
@@ -613,7 +601,13 @@ class ServerModel with ChangeNotifier {
   void showLoginDialog(Client client) {
     showClientDialog(
       client,
-      client.isFileTransfer ? "File Connection" : "Screen Connection",
+      client.isFileTransfer
+          ? "Transfer file"
+          : client.isViewCamera
+              ? "View camera"
+              : client.isTerminal
+                  ? "Terminal"
+                  : "Share screen",
       'Do you accept?',
       'android_new_connection_tip',
       () => sendLoginResponse(client, false),
@@ -692,7 +686,7 @@ class ServerModel with ChangeNotifier {
   void sendLoginResponse(Client client, bool res) async {
     if (res) {
       bind.cmLoginRes(connId: client.id, res: res);
-      if (!client.isFileTransfer) {
+      if (!client.isFileTransfer && !client.isTerminal) {
         parent.target?.invokeMethod("start_capture");
       }
       parent.target?.invokeMethod("cancel_notification", client.id);
@@ -791,12 +785,10 @@ class ServerModel with ChangeNotifier {
     final on = ((keepScreenOn == KeepScreenOn.serviceOn) && _isStart) ||
         (keepScreenOn == KeepScreenOn.duringControlled &&
             _clients.map((e) => !e.disconnected).isNotEmpty);
-    if (on != await WakelockPlus.enabled) {
-      if (on) {
-        WakelockPlus.enable();
-      } else {
-        WakelockPlus.disable();
-      }
+    if (on) {
+      WakelockManager.enable(_wakelockKey, isServer: true);
+    } else {
+      WakelockManager.disable(_wakelockKey);
     }
   }
 }
@@ -806,6 +798,7 @@ enum ClientType {
   file,
   camera,
   portForward,
+  terminal,
 }
 
 class Client {
@@ -813,8 +806,10 @@ class Client {
   bool authorized = false;
   bool isFileTransfer = false;
   bool isViewCamera = false;
+  bool isTerminal = false;
   String portForward = "";
   String name = "";
+  String avatar = "";
   String peerId = ""; // peer user's id,show at app
   bool keyboard = false;
   bool clipboard = false;
@@ -839,8 +834,10 @@ class Client {
     isFileTransfer = json['is_file_transfer'];
     // TODO: no entry then default.
     isViewCamera = json['is_view_camera'];
+    isTerminal = json['is_terminal'] ?? false;
     portForward = json['port_forward'];
     name = json['name'];
+    avatar = json['avatar'] ?? '';
     peerId = json['peer_id'];
     keyboard = json['keyboard'];
     clipboard = json['clipboard'];
@@ -861,8 +858,10 @@ class Client {
     data['authorized'] = authorized;
     data['is_file_transfer'] = isFileTransfer;
     data['is_view_camera'] = isViewCamera;
+    data['is_terminal'] = isTerminal;
     data['port_forward'] = portForward;
     data['name'] = name;
+    data['avatar'] = avatar;
     data['peer_id'] = peerId;
     data['keyboard'] = keyboard;
     data['clipboard'] = clipboard;
@@ -883,6 +882,8 @@ class Client {
       return ClientType.file;
     } else if (isViewCamera) {
       return ClientType.camera;
+    } else if (isTerminal) {
+      return ClientType.terminal;
     } else if (portForward.isNotEmpty) {
       return ClientType.portForward;
     } else {

@@ -580,6 +580,30 @@ extern "C"
         return rdp_or_console;
     }
 
+    BOOL is_session_locked(DWORD session_id)
+    {
+        if (session_id == 0xFFFFFFFF) {
+            return FALSE;
+        }
+        PWTSINFOEXW pInfo = NULL;
+        DWORD bytes = 0;
+        BOOL locked = FALSE;
+        if (WTSQuerySessionInformationW(
+                WTS_CURRENT_SERVER_HANDLE,
+                session_id,
+                WTSSessionInfoEx,
+                (LPWSTR *)&pInfo,
+                &bytes)) {
+            if (pInfo && pInfo->Level == 1) {
+                locked = (pInfo->Data.WTSInfoExLevel1.SessionFlags == WTS_SESSIONSTATE_LOCK);
+            }
+            if (pInfo) {
+                WTSFreeMemory(pInfo);
+            }
+        }
+        return locked;
+    }
+
     uint32_t get_active_user(PWSTR bufin, uint32_t nin, BOOL rdp)
     {
         uint32_t nout = 0;
@@ -872,7 +896,44 @@ extern "C"
 // Remote printing 
 extern "C"
 {
-#pragma comment(lib, "XpsPrint.lib")
+// Dynamic loading of XPS Print functions
+typedef HRESULT(WINAPI *StartXpsPrintJobFunc)(
+    LPCWSTR printerName,
+    LPCWSTR jobName,
+    LPCWSTR outputFileName,
+    HANDLE progressEvent,
+    HANDLE completionEvent,
+    UINT8* printablePagesOn,
+    UINT32 printablePagesOnCount,
+    IXpsPrintJob** xpsPrintJob,
+    IXpsPrintJobStream** documentStream,
+    IXpsPrintJobStream** printTicketStream);
+
+static HMODULE xpsPrintModule = nullptr;
+static StartXpsPrintJobFunc StartXpsPrintJobPtr = nullptr;
+
+static bool InitXpsPrint()
+{
+    if (xpsPrintModule == nullptr)
+    {
+        xpsPrintModule = LoadLibraryA("XpsPrint.dll");
+        if (xpsPrintModule == nullptr)
+        {
+            flog("Failed to load XpsPrint.dll. Error: %d\n", GetLastError());
+            return false;
+        }
+        
+        StartXpsPrintJobPtr = (StartXpsPrintJobFunc)GetProcAddress(xpsPrintModule, "StartXpsPrintJob");
+        if (StartXpsPrintJobPtr == nullptr)
+        {
+            flog("Failed to get StartXpsPrintJob function. Error: %d\n", GetLastError());
+            FreeLibrary(xpsPrintModule);
+            xpsPrintModule = nullptr;
+            return false;
+        }
+    }
+    return true;
+}
 #pragma warning(push)
 #pragma warning(disable : 4995)
 
@@ -886,6 +947,13 @@ extern "C"
 
     int PrintXPSRawData(LPWSTR printerName, BYTE *rawData, ULONG dataSize)
     {
+        // Check if XPS Print DLL is available
+        if (!InitXpsPrint())
+        {
+            flog("XPS Print functionality not available on this system\n");
+            return -1;
+        }
+
         BOOL isCoInitializeOk = FALSE;
         HRESULT hr = CoInitializeEx(nullptr, COINIT_MULTITHREADED);
         if (hr == RPC_E_CHANGED_MODE)
@@ -931,7 +999,7 @@ extern "C"
         // `StartXpsPrintJob()` is deprecated, but we still use it for compatibility.
         // We may change to use the `Print Document Package API` in the future.
         // https://learn.microsoft.com/en-us/windows/win32/printdocs/xpsprint-functions
-        hr = StartXpsPrintJob(
+        hr = StartXpsPrintJobPtr(
             printerName,
             L"Print Job 1",
             nullptr,
@@ -974,6 +1042,16 @@ extern "C"
         jobOk = TRUE;
 
         return 0;
+    }
+
+    void CleanupXpsPrint()
+    {
+        if (xpsPrintModule != nullptr)
+        {
+            FreeLibrary(xpsPrintModule);
+            xpsPrintModule = nullptr;
+            StartXpsPrintJobPtr = nullptr;
+        }
     }
 
 #pragma warning(pop)
