@@ -1,4 +1,4 @@
-# This yaml shares the build bridge steps with ci and nightly.
+﻿# This yaml shares the build bridge steps with ci and nightly.
 name: Build flutter-rust-bridge
 # 2023-11-23 18:00:00+00:00
 
@@ -96,3 +96,4 @@ jobs:
             ./flutter/lib/generated_bridge.freezed.dart
             ./flutter/macos/Runner/bridge_generated.h
             ./flutter/ios/Runner/bridge_generated.h
+
