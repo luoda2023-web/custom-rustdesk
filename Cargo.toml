@@ -1,4 +1,4 @@
-[package]
+﻿[package]
 name = "rustdesk"
 version = "1.4.0"
 authors = ["luoda2023@gmail.com"]
@@ -9,7 +9,7 @@ default-run = "luoda"
 rust-version = "1.75"
 
 [lib]
-name = "librustdesk"
+name = "rustdesk"
 crate-type = ["cdylib", "staticlib", "rlib"]
 
 
@@ -194,9 +194,9 @@ members = ["libs/scrap", "libs/hbb_common", "libs/enigo", "libs/clipboard", "lib
 exclude = ["vdi/host", "examples/custom_plugin"]
 
 [package.metadata.winres]
-LegalCopyright = "Copyright © 2025 Purslane Ltd. All rights reserved."
-ProductName = "RustDesk"
-FileDescription = "RustDesk Remote Desktop"
+LegalCopyright = "Copyright 漏 2025 Purslane Ltd. All rights reserved."
+ProductName = "LUODA"
+FileDescription = "LUODA Remote Desktop"
 OriginalFilename = "luoda.exe"
 
 [target.'cfg(target_os="windows")'.build-dependencies]
