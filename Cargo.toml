@@ -5,16 +5,12 @@ authors = ["luoda2023@gmail.com"]
 edition = "2021"
 build= "build.rs"
 description = "LUODA Remote Desktop"
-default-run = "luoda"
+default-run = "rustdesk"
 rust-version = "1.75"
 
 [lib]
 name = "librustdesk"
 crate-type = ["cdylib", "staticlib", "rlib"]
-
-[[bin]]
-name = "luoda"
-path = "src/main.rs"
 
 [[bin]]
 name = "naming"
