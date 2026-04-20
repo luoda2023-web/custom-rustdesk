@@ -26,7 +26,6 @@ jobs:
     steps:
       - name: Checkout source code
         uses: actions/checkout@v4
-        with:
 
       - name: Install prerequisites
         run: |
