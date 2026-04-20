@@ -33,7 +33,7 @@
 			<string>com.carriez.rustdesk</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>rustdesk</string>
+				<string>luoda</string>
 			</array>
 		</dict>
 	</array>
