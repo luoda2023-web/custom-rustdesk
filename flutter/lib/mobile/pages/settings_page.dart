@@ -1,4 +1,4 @@
-import 'dart:async';
+﻿import 'dart:async';
 import 'dart:convert';
 import 'dart:typed_data';
 
@@ -275,20 +275,9 @@ class _SettingsState extends State<SettingsPage> with WidgetsBindingObserver {
     Provider.of<FfiModel>(context);
     final outgoingOnly = bind.isOutgoingOnly();
     final incomingOnly = bind.isIncomingOnly();
+    // [LUODA] Hide powered-by text and logo
     final customClientSection = CustomSettingsSection(
-        child: Column(
-      children: [
-        if (bind.isCustomClient())
-          Align(
-            alignment: Alignment.center,
-            child: loadPowered(context),
-          ),
-        Align(
-          alignment: Alignment.center,
-          child: loadLogo(),
-        )
-      ],
-    ));
+        child: SizedBox(height: 0, width: 0));
     final List<AbstractSettingsTile> enhancementsTiles = [];
     final enable2fa = bind.mainHasValid2FaSync();
     final List<AbstractSettingsTile> tfaTiles = [
@@ -1352,3 +1341,5 @@ SettingsTile _getPopupDialogRadioEntry({
     ),
   );
 }
+
+
