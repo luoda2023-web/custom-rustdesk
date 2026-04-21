@@ -924,11 +924,10 @@ jobs:
           doNotCache: false
 
       - name: Install vcpkg dependencies
-       env:
- ANDROID_NDK_HOME: ${{ steps.setup-ndk.outputs.ndk-path }}
- ANDROID_NDK_ROOT: ${{ steps.setup-ndk.outputs.ndk-path }}
- VCPKG_ROOT: /opt/artifacts/vcpkg
-
+        env:
+          ANDROID_NDK_HOME: ${{ steps.setup-ndk.outputs.ndk-path }}
+          ANDROID_NDK_ROOT: ${{ steps.setup-ndk.outputs.ndk-path }}
+          VCPKG_ROOT: /opt/artifacts/vcpkg
         run: |
           case ${{ matrix.job.target }} in
             aarch64-linux-android)
