@@ -1,1 +1,6 @@
-CI trigger 1776878223861
+CI trigger: 2026-04-22T17:21:20.976Z
+Commit 2fc8037: flutter-build.yml fixes applied
+- SIGN_BASE_URL: removed -2 suffix
+- APK naming: rustdesk → luoda
+
+This push triggers CI with fixed workflow file.
