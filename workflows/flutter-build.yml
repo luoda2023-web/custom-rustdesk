@@ -1,6 +1,7 @@
 name: Build the flutter version of the RustDesk
 
 on:
+# CI trigger comment - 2026-04-22T17:23:31.247Z
   workflow_call:
     inputs:
       upload-artifact:
