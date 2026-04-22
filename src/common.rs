@@ -1,4 +1,4 @@
-se std::{
+use std::{
     collections::HashMap,
     future::Future,
     net::{SocketAddr, ToSocketAddrs},
@@ -2100,18 +2100,6 @@ pub fn load_custom_client() {
             return;
         };
         read_custom_client(&data.trim());
-    }
-
-    // LUODA custom defaults - hide "powered by" text and disable auto-update
-    let mut builtin = config::BUILTIN_SETTINGS.write().unwrap();
-    if !builtin.contains_key(config::keys::OPTION_HIDE_POWERED_BY_ME) {
-        builtin.insert(config::keys::OPTION_HIDE_POWERED_BY_ME.to_string(), "Y".to_string());
-    }
-    if !builtin.contains_key(config::keys::OPTION_ALLOW_AUTO_UPDATE) {
-        builtin.insert(config::keys::OPTION_ALLOW_AUTO_UPDATE.to_string(), "N".to_string());
-    }
-    if !builtin.contains_key(config::keys::OPTION_ENABLE_CHECK_UPDATE) {
-        builtin.insert(config::keys::OPTION_ENABLE_CHECK_UPDATE.to_string(), "N".to_string());
     }
 }
 
