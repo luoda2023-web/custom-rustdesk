@@ -1750,7 +1750,7 @@ Future<void> saveWindowPosition(WindowType type,
 
   setPreFrame() {
     final pos = bind.getLocalFlutterOption(k: windowFramePrefix + type.name);
-    var lpos = LastWindowPosition.loadFromString(pos);
+    var lpos = LastWindowPosition.loadFromString(pos!);
     if (lpos != null) {
       if (lpos.offsetWidth != null && lpos.offsetHeight != null) {
         position = Offset(lpos.offsetWidth!, lpos.offsetHeight!);
@@ -2007,7 +2007,7 @@ Future<bool> restoreWindowPosition(WindowType type,
   }
   pos ??= bind.getLocalFlutterOption(k: windowFramePrefix + type.name);
 
-  var lpos = LastWindowPosition.loadFromString(pos);
+  var lpos = LastWindowPosition.loadFromString(pos!);
   if (lpos == null) {
     debugPrint("No window position saved, trying to center the window.");
     switch (type) {
